@@ -1,6 +1,7 @@
 # Precios Cerca · Prices Near — Neighborhood Price Finder
 
 **Live:** https://geoprice.dapp.cl
+**Demo video (2:18):** https://www.youtube.com/watch?v=eqKYygr2MWg
 
 A neighborhood price index built for the **Meta Global AI Developer Hackathon**
 (theme: *Build for Your World*), powered by **Muse Spark** via the Meta Model API.
