@@ -1,0 +1,24 @@
+# GeoPrice — Cloudflare Worker (public, sanitized)
+# Neighborhood price finder ("Precios Cerca") — 6th dimension of a
+# multidimensional marketplace ecosystem.
+# Browse = free, no account, no wallet. Publish = MetaMask as identity,
+# off-chain signature, 0 gas.
+name = "geoprice"
+main = "worker.js"
+compatibility_date = "2026-05-28"
+workers_dev = true
+
+# account_id is intentionally omitted in the public repo.
+# Set it in your own deployment environment, never commit real IDs.
+
+# Custom domain example (replace with your own):
+# routes = [
+#   { pattern = "geoprice.example.com/*", zone_name = "example.com" },
+# ]
+
+# D1 database: create your own and put the returned id here.
+# Table used by this worker: precios_barrio (see schema in README).
+[[d1_databases]]
+binding = "DB"
+database_name = "your-d1-database-name"
+database_id = "00000000-0000-0000-0000-000000000000"

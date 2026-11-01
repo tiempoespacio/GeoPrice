@@ -1,0 +1,15 @@
+# local / private — never commit
+.wrangler/
+.backup/
+.live/
+.dev.vars
+.dev.vars.*
+*.log
+node_modules/
+
+# secrets and keys
+*.key
+*.pem
+id_*
+*_secret*
+*credentials*
