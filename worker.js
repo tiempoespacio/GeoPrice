@@ -38,6 +38,8 @@ var __defProp22222222222222222 = Object.defineProperty;
 var __name22222222222222222 = /* @__PURE__ */ __name2222222222222222((target, value) => __defProp22222222222222222(target, "name", { value, configurable: true }), "__name");
 var __defProp222222222222222222 = Object.defineProperty;
 var __name222222222222222222 = /* @__PURE__ */ __name22222222222222222((target, value) => __defProp222222222222222222(target, "name", { value, configurable: true }), "__name");
+var __defProp2222222222222222222 = Object.defineProperty;
+var __name2222222222222222222 = /* @__PURE__ */ __name222222222222222222((target, value) => __defProp2222222222222222222(target, "name", { value, configurable: true }), "__name");
 var ACCENT = "#34d399";
 var GEO_I18N = {
   es: {
@@ -203,6 +205,7 @@ __name222222222222222(detectLang, "detectLang");
 __name2222222222222222(detectLang, "detectLang");
 __name22222222222222222(detectLang, "detectLang");
 __name222222222222222222(detectLang, "detectLang");
+__name2222222222222222222(detectLang, "detectLang");
 var MANIFEST = {
   name: GEO_I18N.es.manifest_name,
   short_name: GEO_I18N.es.manifest_short,
@@ -275,6 +278,7 @@ __name22222222222222(catOf, "catOf");
 __name222222222222222(catOf, "catOf");
 __name2222222222222222(catOf, "catOf");
 __name22222222222222222(catOf, "catOf");
+__name222222222222222222(catOf, "catOf");
 function normText(s) {
   var x = String(s || "").replace(/\s+/g, " ").trim().toLowerCase();
   if (!x) return "";
@@ -285,6 +289,7 @@ function normText(s) {
     return w.charAt(0).toUpperCase() + w.slice(1);
   }).join(" ");
 }
+__name(normText, "normText");
 function normCity(s) {
   return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
 }
@@ -301,12 +306,14 @@ __name222222222(normCity, "normCity");
 __name2222222222(normCity, "normCity");
 __name22222222222(normCity, "normCity");
 __name222222222222(normCity, "normCity");
+__name2222222222222(normCity, "normCity");
 function rowCoords(row) {
   var lat = row.lat != null ? parseFloat(row.lat) : null;
   var lng = row.lng != null ? parseFloat(row.lng) : null;
   if (lat === null || isNaN(lat) || lng === null || isNaN(lng)) return null;
-  var j = (Number(row.id) * 37 % 17 - 8) * 35e-5;
-  var k = (Number(row.id) * 53 % 13 - 6) * 35e-5;
+  var step = row.geo_source === "gps" ? 7e-5 : row.geo_source === "zone" ? 16e-5 : 35e-5;
+  var j = (Number(row.id) * 37 % 17 - 8) * step;
+  var k = (Number(row.id) * 53 % 13 - 6) * step;
   return [lat + j, lng + k];
 }
 __name(rowCoords, "rowCoords");
@@ -322,6 +329,7 @@ __name222222222(rowCoords, "rowCoords");
 __name2222222222(rowCoords, "rowCoords");
 __name22222222222(rowCoords, "rowCoords");
 __name222222222222(rowCoords, "rowCoords");
+__name2222222222222(rowCoords, "rowCoords");
 function mapJs(markersJson) {
   return "(function(){var el=document.getElementById('map');if(!el||typeof L==='undefined')return;var marks=" + markersJson + `;if(!marks.length)return;var m=L.map('map',{scrollWheelZoom:false}).setView([marks[0].lat,marks[0].lng],13);L.tileLayer('/tiles/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(m);var b=[];marks.forEach(function(p){var icon=L.divIcon({className:'',html:'<span class="price-pin">$'+Number(p.precio).toLocaleString('es-CL')+'</span>',iconSize:null});var mk=L.marker([p.lat,p.lng],{icon:icon}).addTo(m);function esc(s){return String(s||'').replace(/</g,'&lt;');}var meta=[p.store,p.zona].filter(Boolean).map(esc).join(' \xB7 ');mk.bindPopup('<strong>'+esc(p.item)+'</strong>'+(meta?'<br>'+meta:'')+'<br><a href="/precio/'+p.id+'">$'+Number(p.precio).toLocaleString('es-CL')+'</a>');b.push([p.lat,p.lng]);});if(b.length>1)m.fitBounds(b,{padding:[24,24]});setTimeout(function(){m.invalidateSize();},300);})();`;
 }
@@ -338,6 +346,7 @@ __name222222222(mapJs, "mapJs");
 __name2222222222(mapJs, "mapJs");
 __name22222222222(mapJs, "mapJs");
 __name222222222222(mapJs, "mapJs");
+__name2222222222222(mapJs, "mapJs");
 function homeHtml(lang, t, geoCity, liveRows) {
   var langButtons = LANG_CODES.map(function(c) {
     return '<button data-lang="' + c + '"' + (c === lang ? ' class="active"' : "") + ` onclick="location.href='?lang=` + c + `'">` + c + "</button>";
@@ -410,6 +419,7 @@ __name222222222222222(homeHtml, "homeHtml");
 __name2222222222222222(homeHtml, "homeHtml");
 __name22222222222222222(homeHtml, "homeHtml");
 __name222222222222222222(homeHtml, "homeHtml");
+__name2222222222222222222(homeHtml, "homeHtml");
 function pubPanelJs() {
   return "(function(){var b=document.getElementById('pubBtn'),p=document.getElementById('pubPanel');if(!b||!p)return;b.addEventListener('click',function(e){e.preventDefault();p.classList.toggle('open');var i=document.getElementById('pubInput');if(i&&p.classList.contains('open'))i.focus();});var go=document.getElementById('pubGo'),inp=document.getElementById('pubInput'),out=document.getElementById('pubOut'),err=document.getElementById('pubErr'),cf=document.getElementById('pubConfirm');var zone='';try{var g=document.querySelector('.geo-line');if(g)zone=(g.textContent||'').replace(/^[^:]{0,24}:s*/,'');}catch(x){}window.__pubDraft=null;try{var du=new URLSearchParams(location.search).get('draft');var rd=null,rt=0;if(du){try{rd=decodeURIComponent(escape(atob(decodeURIComponent(du))));rt=Date.now();}catch(x){}}if(!rd){rd=localStorage.getItem('gp_draft');rt=Number(localStorage.getItem('gp_time')||0);}if(rd&&rt&&Date.now()-rt<1800000){var dd=JSON.parse(rd);window.__pubDraft=dd;var ri=localStorage.getItem('gp_input');if(inp&&(dd._txt||ri))inp.value=dd._txt||ri;if(p)p.classList.add('open');if(out)out.textContent=(dd.reply||'')+(dd.precio!==null&&dd.precio!==undefined?' \xB7 '+dd.precio:'');if(cf){var okR2=dd.intent==='report'&&dd.precio!==null&&dd.precio!==undefined&&dd.categoria&&dd.categoria!=='otros'&&(dd.zona||zone);if(okR2)cf.classList.remove('hide');}}}catch(x){}async function send(){if(err)err.textContent='';var msg=inp?inp.value.trim():'';if(!msg||!out)return;out.textContent='...';try{var lang=document.documentElement.lang||'es';var r=await fetch('/api/v1/assist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,lang:lang,zone:zone})});var d=await r.json();d._txt=msg;window.__pubDraft=d;try{localStorage.setItem('gp_draft',JSON.stringify(d));localStorage.setItem('gp_input',msg);localStorage.setItem('gp_time',String(Date.now()));}catch(x){}var line=d.reply||'';if(d.precio!==null&&d.precio!==undefined)line+=' \xB7 '+d.precio;out.textContent=line;if(cf){var okR=d.intent==='report'&&d.precio!==null&&d.precio!==undefined&&d.categoria&&d.categoria!=='otros'&&(d.zona||zone);if(okR)cf.classList.remove('hide');else cf.classList.add('hide');if(d.intent==='report'&&!okR)out.textContent=line+' \\u26A0 '+(lang==='en'?'clear category/zone needed':'falta categor\\xEDa/zona clara');if(d.intent==='report'&&okR&&err&&/Android|iPhone|iPad/i.test(navigator.userAgent)&&!window.ethereum){cf.classList.add('hide');err.textContent='';var ms2=document.createElement('span');ms2.textContent=(cf.getAttribute('data-need')||'wallet')+' \xB7 ';var ma2=document.createElement('a');ma2.href='https://metamask.app.link/dapp/'+location.host+location.pathname+'?draft='+encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(d)))));ma2.style.color='var(--acc)';ma2.style.fontWeight='700';ma2.textContent=cf.getAttribute('data-open')||'MetaMask';err.appendChild(ms2);err.appendChild(ma2);}}}catch(x){if(err)err.textContent='offline';}}if(go)go.addEventListener('click',send);if(inp)inp.addEventListener('keydown',function(e){if(e.key==='Enter')send();});if(cf)cf.addEventListener('click',async function(){if(err)err.textContent='';try{if(!window.ethereum){if(err){err.textContent='';var ms=document.createElement('span');ms.textContent=(cf.getAttribute('data-need')||'wallet')+' \xB7 ';var ma=document.createElement('a');var mob=/Android|iPhone|iPad/i.test(navigator.userAgent);ma.href=mob?('https://metamask.app.link/dapp/'+location.host+location.pathname+(window.__pubDraft?('?draft='+encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(window.__pubDraft)))))):'')):'https://metamask.io/download/';ma.target='_blank';ma.rel='noopener';ma.style.color='var(--acc)';ma.style.fontWeight='700';ma.textContent=(mob?cf.getAttribute('data-open'):cf.getAttribute('data-install'))||'MetaMask';err.appendChild(ms);err.appendChild(ma);}return;}var acc=null;try{acc=await window.ethereum.request({method:'eth_accounts'});}catch(x){}if(!acc||!acc[0])acc=await window.ethereum.request({method:'eth_requestAccounts'});var a=acc&&acc[0]?acc[0]:'';window.__pubWallet=a;var gps={};try{gps=await new Promise(function(res){if(!navigator.geolocation)return res({});var done=false;var to=setTimeout(function(){if(!done){done=true;res({});}},4500);navigator.geolocation.getCurrentPosition(function(p){if(done)return;done=true;clearTimeout(to);res({gps_lat:p.coords.latitude,gps_lng:p.coords.longitude,gps_accuracy:Math.round(p.coords.accuracy||0)});},function(){if(done)return;done=true;clearTimeout(to);res({});},{enableHighAccuracy:true,timeout:4000,maximumAge:60000});});}catch(x){}var d=window.__pubDraft||{};var msg=inp?inp.value.trim():'';var pr=await fetch('/api/v1/precios',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({item:d.item||msg,precio:d.precio,unidad:d.unidad||'',zone:(d.zona||zone),store_name:d.local||d.store_name||'',categoria:d.categoria||'',lang:document.documentElement.lang||'es',wallet:a,gps_lat:gps.gps_lat||null,gps_lng:gps.gps_lng||null,gps_accuracy:gps.gps_accuracy||null})});var pj=await pr.json();if(pj&&pj.ok){if(out)out.textContent=(cf.getAttribute('data-ok')||'ok')+' \xB7 #'+pj.id+(pj.cid_ipfs?' \xB7 IPFS':'')+(pj.seo_url?' \xB7 '+pj.seo_url:'')+(pj.geo&&pj.geo.source==='gps'?' \xB7 GPS'+(pj.geo.accuracy_m?' \xB1'+pj.geo.accuracy_m+'m':''):pj.geo&&pj.geo.source?' \xB7 geo:'+pj.geo.source:'');cf.classList.add('hide');try{localStorage.removeItem('gp_draft');localStorage.removeItem('gp_input');localStorage.removeItem('gp_time');}catch(x){}}else{if(err)err.textContent=(pj&&pj.error)||'error';}}catch(x){if(err)err.textContent='wallet';}});})();";
 }
@@ -432,6 +442,7 @@ __name222222222222222(pubPanelJs, "pubPanelJs");
 __name2222222222222222(pubPanelJs, "pubPanelJs");
 __name22222222222222222(pubPanelJs, "pubPanelJs");
 __name222222222222222222(pubPanelJs, "pubPanelJs");
+__name2222222222222222222(pubPanelJs, "pubPanelJs");
 function filterJs() {
   return "(function(){var s=document.getElementById('fSearch'),list=document.getElementById('rowsList'),emp=document.getElementById('fEmpty');if(!list)return;var cat='all';function rows(){return Array.prototype.slice.call(list.querySelectorAll('.row'));}function apply(){var q=s?s.value.trim().toLowerCase():'';var n=0;rows().forEach(function(r){var ok=(!q||r.textContent.toLowerCase().indexOf(q)>=0)&&(cat==='all'||r.getAttribute('data-cat')===cat);r.style.display=ok?'':'none';if(ok)n++;});if(emp)emp.style.display=n?'none':'';}function sortBy(mode){var rs=rows();rs.sort(function(a,b){if(mode==='asc')return (+a.getAttribute('data-precio'))-(+b.getAttribute('data-precio'));if(mode==='desc')return (+b.getAttribute('data-precio'))-(+a.getAttribute('data-precio'));return (+b.getAttribute('data-id'))-(+a.getAttribute('data-id'));});rs.forEach(function(r){list.appendChild(r);});}var ch=document.getElementById('fChips');if(ch)ch.addEventListener('click',function(e){var b=e.target.closest('[data-cat]');if(!b)return;cat=b.getAttribute('data-cat');Array.prototype.forEach.call(ch.querySelectorAll('.chip'),function(x){x.classList.toggle('on',x===b);});apply();});var so=document.getElementById('fSorts');if(so)so.addEventListener('click',function(e){var b=e.target.closest('[data-sort]');if(!b)return;Array.prototype.forEach.call(so.querySelectorAll('.chip'),function(x){x.classList.toggle('on',x===b);});sortBy(b.getAttribute('data-sort'));apply();});if(s)s.addEventListener('input',apply);apply();})();";
 }
@@ -453,6 +464,7 @@ __name22222222222222(filterJs, "filterJs");
 __name222222222222222(filterJs, "filterJs");
 __name2222222222222222(filterJs, "filterJs");
 __name22222222222222222(filterJs, "filterJs");
+__name222222222222222222(filterJs, "filterJs");
 function swRegisterJs() {
   return "(function(){if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').then(function(r){console.debug('[PWA]',r.scope)}).catch(function(e){console.debug('[PWA] reg fail',e)})})}})();";
 }
@@ -475,6 +487,7 @@ __name222222222222222(swRegisterJs, "swRegisterJs");
 __name2222222222222222(swRegisterJs, "swRegisterJs");
 __name22222222222222222(swRegisterJs, "swRegisterJs");
 __name222222222222222222(swRegisterJs, "swRegisterJs");
+__name2222222222222222222(swRegisterJs, "swRegisterJs");
 function merkabaSvg() {
   return '<svg viewBox="0 0 120 120" fill="none"><polygon class="tri up" points="60,12 110,84 10,84"/><polygon class="tri dn" points="60,108 10,36 110,36"/><circle class="v" cx="60" cy="12" r="3.5"/><circle class="v" cx="60" cy="108" r="3.5"/><circle class="v p" cx="10" cy="84" r="3"/><circle class="v p" cx="110" cy="84" r="3"/><circle class="v p" cx="10" cy="36" r="3"/><circle class="v p" cx="110" cy="36" r="3"/><circle class="v c" cx="60" cy="60" r="4"/></svg>';
 }
@@ -497,6 +510,7 @@ __name222222222222222(merkabaSvg, "merkabaSvg");
 __name2222222222222222(merkabaSvg, "merkabaSvg");
 __name22222222222222222(merkabaSvg, "merkabaSvg");
 __name222222222222222222(merkabaSvg, "merkabaSvg");
+__name2222222222222222222(merkabaSvg, "merkabaSvg");
 function css() {
   return ":root{\n--bg:#04040a;--fg:#e8e8f5;--fg2:#a8a8c8;--fg3:#9a9ab8;\n--acc:" + ACCENT + ";--acc2:#d8b0d4;\n--card:rgba(52,211,153,.06);--border:rgba(52,211,153,.16);\n--shadow:rgba(0,0,0,.6);\n--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;\n--mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace;\n}\n*{margin:0;padding:0;box-sizing:border-box}\nbody{background:var(--bg);color:var(--fg);font-family:var(--sans);min-height:100vh}\ncanvas#net{position:fixed;inset:0;z-index:0}\n.fx{position:fixed;inset:0;pointer-events:none}\n.fx.scan{z-index:2;opacity:.22;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.4) 3px 4px)}\n.fx.vig{z-index:3;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.88) 100%)}\n.wrap{position:relative;z-index:4;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px}\n.merkaba{width:150px;height:150px;position:relative;margin-bottom:18px}\n.merkaba .ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(52,211,153,.14)}\n.merkaba .ring.r2{inset:24px;border-color:rgba(52,211,153,.1);border-style:dashed}\n.merkaba .spin{position:absolute;inset:0;animation:spin 12s linear infinite}\n.merkaba .spin .dot{position:absolute;top:-3px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--acc)}\n.merkaba .core{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}\n.merkaba .mk{width:100px;height:100px;animation:breathe 5s ease-in-out infinite}\n.merkaba .mk svg{width:100%;height:100%}\n.merkaba .tri{fill:none;stroke:var(--acc);stroke-width:1.2;transform-origin:60px 60px}\n.merkaba .tri.up{fill:rgba(52,211,153,.04);animation:rotA 26s linear infinite}\n.merkaba .tri.dn{animation:rotB 26s linear infinite}\n.merkaba .v{fill:var(--acc)}.merkaba .v.p{fill:var(--acc2)}.merkaba .v.c{fill:#fff}\n@keyframes spin{to{transform:rotate(360deg)}}\n@keyframes rotA{to{transform:rotate(360deg)}}\n@keyframes rotB{to{transform:rotate(-360deg)}}\n@keyframes breathe{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}\nh1{font-size:clamp(2.4rem,9vw,4.2rem);font-weight:800;letter-spacing:-2px;line-height:.95;color:var(--fg);text-align:center}\n.tagline{font-family:var(--mono);font-size:13px;color:var(--fg2);letter-spacing:0;margin-top:12px;text-align:center}\n.sub{font-family:var(--mono);font-size:12px;color:var(--acc);letter-spacing:0;margin-top:6px;text-align:center}\n.geo-line{font-family:var(--mono);font-size:12px;color:var(--acc2);letter-spacing:0;margin-top:8px;text-align:center;min-height:14px}\n.free{font-family:var(--mono);font-size:11px;color:var(--fg3);letter-spacing:0;margin-top:14px;text-align:center;border:1px solid var(--border);border-radius:4px;padding:6px 12px;background:var(--card)}\n.block-head{display:flex;align-items:center;gap:10px;margin-top:30px;width:100%;max-width:560px}\n.block-head .lbl{font-family:var(--mono);font-size:12px;color:var(--fg2);letter-spacing:0}\n.block-head .demo{font-family:var(--mono);font-size:10px;color:var(--acc2);border:1px solid rgba(216,176,212,.3);border-radius:4px;padding:2px 8px}\n.rows{width:100%;max-width:560px;display:flex;flex-direction:column;gap:10px;margin-top:12px}\n.row{display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--card);border:1px solid var(--border);border-radius:4px;transition:transform .25s cubic-bezier(.2,.7,.3,1),border-color .25s}\n.row:hover{transform:translateY(-2px);border-color:var(--acc)}\n.row .dot{width:8px;height:8px;border-radius:50%;background:var(--acc);flex:none;box-shadow:0 0 10px rgba(52,211,153,.6)}\n.row .body{flex:1;min-width:0}\n.row .nm{font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:0}\n.row .meta{font-family:var(--mono);font-size:11px;color:var(--fg2);letter-spacing:0;margin-top:3px}\n.row .meta .old{color:var(--acc2);font-size:10px;margin-left:6px}\n.row .pr{font-family:var(--mono);font-size:16px;font-weight:800;color:var(--acc);letter-spacing:0;flex:none}\n.note{font-family:var(--mono);font-size:10px;color:var(--fg3);letter-spacing:0;margin-top:12px;text-align:center;max-width:560px}\n.cta-row{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap;justify-content:center}\n.btn{display:inline-flex;flex-direction:column;gap:2px;padding:12px 20px;border-radius:4px;text-decoration:none;font-family:var(--mono);transition:all .2s;letter-spacing:0}\n.btn .sub2{font-size:9px;opacity:.7}\n.btn.primary{font-size:13px;font-weight:700;color:var(--bg);background:var(--acc);border:1px solid var(--acc)}\n.btn.primary:hover{box-shadow:0 8px 32px rgba(52,211,153,.3);transform:translateY(-2px)}\n.btn.primary .sub2{color:rgba(4,4,10,.7)}\n.btn.ghost{font-size:13px;color:var(--fg);background:var(--card);border:1px solid var(--border)}\n.btn.ghost:hover{border-color:var(--acc);color:var(--acc)}\n.back{margin-top:34px;font-family:var(--mono);font-size:13px;color:var(--fg2);text-decoration:none;display:inline-flex;align-items:center;gap:8px}\n.back:hover{color:var(--acc)}.back .arr{transition:transform .25s}.back:hover .arr{transform:translateX(-4px)}\n.lang-switch{position:fixed;top:16px;right:16px;z-index:10;display:flex;flex-wrap:wrap;gap:4px;max-width:220px;justify-content:flex-end}\n.lang-switch button{font-family:var(--mono);font-size:10px;font-weight:600;padding:5px 8px;border-radius:4px;border:1px solid var(--border);background:var(--card);color:var(--fg2);cursor:pointer;transition:all .2s}\n.lang-switch button:hover{border-color:var(--acc);color:var(--acc)}\n.lang-switch button.active{border-color:var(--acc);color:var(--acc);background:rgba(52,211,153,.12)}\n@media (max-width:480px){.merkaba{width:120px;height:120px}.merkaba .mk{width:80px;height:80px}.lang-switch{top:10px;right:10px}}\n@media (prefers-reduced-motion:reduce){.merkaba .spin,.merkaba .mk,.merkaba .tri{animation:none}}\n.hide{display:none}\n.filters{width:100%;max-width:560px;margin:12px 0 2px;display:flex;flex-direction:column;gap:8px}.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{font-family:var(--mono);font-size:10px;letter-spacing:.03em;padding:6px 11px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--fg2);cursor:pointer;transition:opacity .18s ease}.chip.on{background:var(--acc);border-color:var(--acc);color:#04040a;font-weight:700}.cat{color:var(--acc)}#map{height:340px;width:100%;max-width:560px;border:1px solid var(--border);border-radius:12px;margin-top:10px;background:#070a09;z-index:1}.price-pin{background:var(--acc);color:#04040a;font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;border:1px solid rgba(4,4,10,.8);white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,.5)}.leaflet-popup-content{font-family:var(--mono);font-size:12px}.leaflet-tile-pane{filter:invert(.92) hue-rotate(180deg) saturate(.65) brightness(.92) contrast(1.05)}.nm a{color:inherit;text-decoration:none}.nm a:hover{color:var(--acc)}\n.panel{display:none;margin-top:14px;width:100%;max-width:520px;border:1px solid var(--border);border-radius:12px;padding:14px;background:var(--card);text-align:left}\n.panel.open{display:block}\n.field{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,.25);color:var(--fg);font-family:var(--sans);font-size:15px}\n.field:focus{outline:none;border-color:var(--acc)}\n.prow{display:flex;gap:8px;margin-top:10px}\n.prow .field{flex:1}\n.prow .btn{flex:1}\n.draft{margin-top:10px;font-size:14px;color:var(--fg2);white-space:pre-wrap}\n.draft b{color:var(--fg)}\n.perr{margin-top:8px;font-size:13px;color:#f87171}\n";
 }
@@ -519,6 +533,7 @@ __name222222222222222(css, "css");
 __name2222222222222222(css, "css");
 __name22222222222222222(css, "css");
 __name222222222222222222(css, "css");
+__name2222222222222222222(css, "css");
 function bgNetJs() {
   return "var BG_NET_ENGINE = true;\nvar BG_ACCENTS = {\n  hub:    { particle: [170,178,210], line: [138,144,240] },   // azul-cosmos (dapp/tiempo)\n  market: { particle: [52,211,153],  line: [52,211,153]  }    // mint #34d399 (dimensiones)\n};\nfunction initBgNet(opts) {\n  opts = opts || {};\n  var accentKey = opts.accent || 'hub';\n  var accent = BG_ACCENTS[accentKey] || BG_ACCENTS.hub;\n  var cv = document.getElementById('net') || document.getElementById('mk-net');\n  if (!cv) {\n    var host = document.getElementById('bg-host') || document.body;\n    cv = document.createElement('canvas');\n    cv.id = 'net';\n    cv.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none';\n    host.insertBefore(cv, host.firstChild);\n  }\n  var cx = cv.getContext('2d');\n  // \u2500\u2500 DPR (la mejora que los sitios no tra\xEDan) \u2500\u2500\n  var dpr = Math.min(window.devicePixelRatio || 1, 2);\n  var W, H, P = [], M = { x: -999, y: -999 }, PX = 0, PY = 0;\n  // seed determinista (para no re-azarar entre recargas en la misma sesi\xF3n)\n  function seed() {\n    // hash simple del tama\xF1o de pantalla \u2192 seed estable\n    return (innerWidth * 7 + innerHeight * 13);\n  }\n  var s = seed();\n  function rnd() { s = (s * 9301 + 49297) % 233280; return s / 233280; }\n  function rs() {\n    W = innerWidth; H = innerHeight;\n    cv.width = W * dpr; cv.height = H * dpr;\n    cv.style.width = W + 'px'; cv.style.height = H + 'px';\n    cx.setTransform(dpr, 0, 0, dpr, 0, 0);\n  }\n  rs();\n  addEventListener('resize', function () { rs(); });\n  // mouse + touch (parallax)\n  addEventListener('mousemove', function (e) {\n    M.x = e.clientX; M.y = e.clientY;\n    PX = (e.clientX / W - .5) * 20; PY = (e.clientY / H - .5) * 20;\n  });\n  addEventListener('touchmove', function (e) {\n    if (e.touches[0]) {\n      M.x = e.touches[0].clientX; M.y = e.touches[0].clientY;\n      PX = (e.touches[0].clientX / innerWidth - .5) * 20;\n      PY = (e.touches[0].clientY / innerHeight - .5) * 20;\n    }\n  }, { passive: true });\n  // part\xEDculas\n  var N = Math.min(64, Math.floor(innerWidth / 18));\n  for (var i = 0; i < N; i++) {\n    P.push({ x: rnd() * W, y: rnd() * H, z: rnd() * 1 + .3,\n             vx: (rnd() - .5) * .22, vy: (rnd() - .5) * .22 });\n  }\n  function tick() {\n    cx.clearRect(0, 0, W, H);\n    // estrellas\n    for (var i = 0; i < P.length; i++) {\n      var p = P[i], dx = M.x - p.x, dy = M.y - p.y, dd = Math.sqrt(dx * dx + dy * dy);\n      if (dd < 140) { p.vx += dx / dd * .015; p.vy += dy / dd * .015; }\n      p.x += p.vx; p.y += p.vy;\n      if (p.x < 0) p.x += W; if (p.x > W) p.x -= W;\n      if (p.y < 0) p.y += H; if (p.y > H) p.y -= H;\n      var px = p.x - PX * p.z, py = p.y - PY * p.z, r = p.z * 1.4;\n      cx.beginPath(); cx.arc(px, py, r, 0, 7);\n      cx.fillStyle = 'rgba(' + accent.particle.join(',') + ',' + (0.14 + p.z * 0.2) + ')';\n      cx.fill();\n    }\n    // cadenas sutiles\n    for (var i = 0; i < P.length; i++) for (var j = i + 1; j < P.length; j++) {\n      var a = P[i], b = P[j], dx = a.x - b.x, dy = a.y - b.y, d = dx * dx + dy * dy;\n      if (d < 6500) {\n        cx.beginPath();\n        cx.moveTo(a.x - PX * a.z, a.y - PY * a.z);\n        cx.lineTo(b.x - PX * b.z, b.y - PY * b.z);\n        cx.strokeStyle = 'rgba(' + accent.line.join(',') + ',' + ((1 - d / 6500) * 0.16) + ')';\n        cx.lineWidth = .5; cx.stroke();\n      }\n    }\n    if (!document.hidden) requestAnimationFrame(tick);\n  }\n  // pause en visibilitychange (la otra mejora)\n  document.addEventListener('visibilitychange', function () {\n    if (!document.hidden) tick();\n  });\n  // reduced-motion \u2192 est\xE1tico (dibuja 1 frame, sin RAF)\n  var rm = matchMedia('(prefers-reduced-motion:reduce)');\n  function frame() {\n    cx.clearRect(0, 0, W, H);\n    for (var i = 0; i < P.length; i++) {\n      var p = P[i];\n      cx.beginPath(); cx.arc(p.x, p.y, p.z * 1.4, 0, 7);\n      cx.fillStyle = 'rgba(' + accent.particle.join(',') + ',0.18)'; cx.fill();\n    }\n  }\n  if (rm.matches) { frame(); } else { tick(); }\n}\ninitBgNet({ accent: 'market' });\n";
 }
@@ -541,6 +556,7 @@ __name222222222222222(bgNetJs, "bgNetJs");
 __name2222222222222222(bgNetJs, "bgNetJs");
 __name22222222222222222(bgNetJs, "bgNetJs");
 __name222222222222222222(bgNetJs, "bgNetJs");
+__name2222222222222222222(bgNetJs, "bgNetJs");
 var META_ENDPOINT = "https://api.meta.ai/v1/responses";
 var CHAT_CORS = {
   "content-type": "application/json",
@@ -624,6 +640,7 @@ __name22222222222222(demoChatReply, "demoChatReply");
 __name222222222222222(demoChatReply, "demoChatReply");
 __name2222222222222222(demoChatReply, "demoChatReply");
 __name22222222222222222(demoChatReply, "demoChatReply");
+__name222222222222222222(demoChatReply, "demoChatReply");
 function extractMetaText(data) {
   if (!data || typeof data !== "object") return "";
   if (typeof data.output_text === "string" && data.output_text) return data.output_text;
@@ -669,6 +686,7 @@ __name22222222222222(extractMetaText, "extractMetaText");
 __name222222222222222(extractMetaText, "extractMetaText");
 __name2222222222222222(extractMetaText, "extractMetaText");
 __name22222222222222222(extractMetaText, "extractMetaText");
+__name222222222222222222(extractMetaText, "extractMetaText");
 async function handleChat(body, env) {
   var message = String(body && body.message || "").slice(0, 500);
   var lang = String(body && body.lang || "es").slice(0, 8);
@@ -741,6 +759,7 @@ __name22222222222222(handleChat, "handleChat");
 __name222222222222222(handleChat, "handleChat");
 __name2222222222222222(handleChat, "handleChat");
 __name22222222222222222(handleChat, "handleChat");
+__name222222222222222222(handleChat, "handleChat");
 function needDb(env) {
   return env && env.DB ? env.DB : null;
 }
@@ -762,6 +781,7 @@ __name22222222222222(needDb, "needDb");
 __name222222222222222(needDb, "needDb");
 __name2222222222222222(needDb, "needDb");
 __name22222222222222222(needDb, "needDb");
+__name222222222222222222(needDb, "needDb");
 function isWallet(a) {
   return typeof a === "string" && /^0x[a-fA-F0-9]{40}$/.test(a);
 }
@@ -783,6 +803,7 @@ __name22222222222222(isWallet, "isWallet");
 __name222222222222222(isWallet, "isWallet");
 __name2222222222222222(isWallet, "isWallet");
 __name22222222222222222(isWallet, "isWallet");
+__name222222222222222222(isWallet, "isWallet");
 async function postPrecio(body, env, request) {
   var db = needDb(env);
   if (!db) {
@@ -803,7 +824,8 @@ async function postPrecio(body, env, request) {
   item = normText(item);
   var unidad = body.unidad ? String(body.unidad).slice(0, 24) : "unidad";
   var zona = body.zone || body.zona ? String(body.zone || body.zona).slice(0, 80) : "";
-  var store = body.store_name ? String(body.store_name).slice(0, 120) : "";  var cf = request && request.cf || {};
+  var store = body.store_name ? String(body.store_name).slice(0, 120) : "";
+  var cf = request && request.cf || {};
   var geoCity = cf.city ? String(cf.city).slice(0, 80) : "";
   var geoRegion = cf.regionCode ? String(cf.regionCode).slice(0, 16) : "";
   var geoCountry = cf.country ? String(cf.country).slice(0, 8) : "";
@@ -1004,6 +1026,7 @@ __name22222222222222(postPrecio, "postPrecio");
 __name222222222222222(postPrecio, "postPrecio");
 __name2222222222222222(postPrecio, "postPrecio");
 __name22222222222222222(postPrecio, "postPrecio");
+__name222222222222222222(postPrecio, "postPrecio");
 async function listPrecios(url, env) {
   var db = needDb(env);
   if (!db) {
@@ -1047,6 +1070,7 @@ __name22222222222222(listPrecios, "listPrecios");
 __name222222222222222(listPrecios, "listPrecios");
 __name2222222222222222(listPrecios, "listPrecios");
 __name22222222222222222(listPrecios, "listPrecios");
+__name222222222222222222(listPrecios, "listPrecios");
 function escHtml(s) {
   return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
@@ -1068,6 +1092,7 @@ __name22222222222222(escHtml, "escHtml");
 __name222222222222222(escHtml, "escHtml");
 __name2222222222222222(escHtml, "escHtml");
 __name22222222222222222(escHtml, "escHtml");
+__name222222222222222222(escHtml, "escHtml");
 async function getLiveRows(env) {
   var db = needDb(env);
   if (!db) return [];
@@ -1096,6 +1121,7 @@ __name22222222222222(getLiveRows, "getLiveRows");
 __name222222222222222(getLiveRows, "getLiveRows");
 __name2222222222222222(getLiveRows, "getLiveRows");
 __name22222222222222222(getLiveRows, "getLiveRows");
+__name222222222222222222(getLiveRows, "getLiveRows");
 var SITE_URL = "https://geoprice.dapp.cl";
 var PINATA_GATEWAY = "https://teal-efficient-penguin-784.mypinata.cloud";
 function formatPrecio(lang, value) {
@@ -1118,6 +1144,7 @@ __name2222222222222(formatPrecio, "formatPrecio");
 __name22222222222222(formatPrecio, "formatPrecio");
 __name222222222222222(formatPrecio, "formatPrecio");
 __name2222222222222222(formatPrecio, "formatPrecio");
+__name22222222222222222(formatPrecio, "formatPrecio");
 function escapeXml(s) {
   return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 }
@@ -1138,6 +1165,7 @@ __name2222222222222(escapeXml, "escapeXml");
 __name22222222222222(escapeXml, "escapeXml");
 __name222222222222222(escapeXml, "escapeXml");
 __name2222222222222222(escapeXml, "escapeXml");
+__name22222222222222222(escapeXml, "escapeXml");
 async function pinPrecioToIpfs(env, record) {
   var jwt = env && env.PINATA_JWT ? String(env.PINATA_JWT) : "";
   if (!jwt || !record || !record.id) return null;
@@ -1213,6 +1241,7 @@ __name2222222222222(pinPrecioToIpfs, "pinPrecioToIpfs");
 __name22222222222222(pinPrecioToIpfs, "pinPrecioToIpfs");
 __name222222222222222(pinPrecioToIpfs, "pinPrecioToIpfs");
 __name2222222222222222(pinPrecioToIpfs, "pinPrecioToIpfs");
+__name22222222222222222(pinPrecioToIpfs, "pinPrecioToIpfs");
 async function getPrecioById(env, id) {
   var db = needDb(env);
   if (!db) return null;
@@ -1241,6 +1270,7 @@ __name2222222222222(getPrecioById, "getPrecioById");
 __name22222222222222(getPrecioById, "getPrecioById");
 __name222222222222222(getPrecioById, "getPrecioById");
 __name2222222222222222(getPrecioById, "getPrecioById");
+__name22222222222222222(getPrecioById, "getPrecioById");
 async function ensureClaimsTable(env) {
   var db = needDb(env);
   if (!db) return null;
@@ -1270,6 +1300,7 @@ __name222222222222(ensureClaimsTable, "ensureClaimsTable");
 __name2222222222222(ensureClaimsTable, "ensureClaimsTable");
 __name22222222222222(ensureClaimsTable, "ensureClaimsTable");
 __name222222222222222(ensureClaimsTable, "ensureClaimsTable");
+__name2222222222222222(ensureClaimsTable, "ensureClaimsTable");
 async function findStoreForWallet(env, wallet) {
   var db = needDb(env);
   if (!db || !wallet) return null;
@@ -1297,6 +1328,7 @@ __name222222222222(findStoreForWallet, "findStoreForWallet");
 __name2222222222222(findStoreForWallet, "findStoreForWallet");
 __name22222222222222(findStoreForWallet, "findStoreForWallet");
 __name222222222222222(findStoreForWallet, "findStoreForWallet");
+__name2222222222222222(findStoreForWallet, "findStoreForWallet");
 async function getLatestClaim(env, precioId) {
   var db = needDb(env);
   if (!db) return null;
@@ -1324,6 +1356,7 @@ __name222222222222(getLatestClaim, "getLatestClaim");
 __name2222222222222(getLatestClaim, "getLatestClaim");
 __name22222222222222(getLatestClaim, "getLatestClaim");
 __name222222222222222(getLatestClaim, "getLatestClaim");
+__name2222222222222222(getLatestClaim, "getLatestClaim");
 async function postReclamo(body, env) {
   var db = await ensureClaimsTable(env);
   if (!db) {
@@ -1389,6 +1422,7 @@ __name222222222222(postReclamo, "postReclamo");
 __name2222222222222(postReclamo, "postReclamo");
 __name22222222222222(postReclamo, "postReclamo");
 __name222222222222222(postReclamo, "postReclamo");
+__name2222222222222222(postReclamo, "postReclamo");
 function claimJs(precioId) {
   return "(function(){var out=document.getElementById('claimOut');function wire(id,type){var b=document.getElementById(id);if(!b)return;b.addEventListener('click',async function(){try{if(!window.ethereum){if(out){out.textContent='';var cs=document.createElement('span');cs.textContent=(b.getAttribute('data-need')||'wallet')+' \xB7 ';var ca=document.createElement('a');var cm=/Android|iPhone|iPad/i.test(navigator.userAgent);ca.href=cm?('https://metamask.app.link/dapp/'+location.host+location.pathname):'https://metamask.io/download/';ca.target='_blank';ca.rel='noopener';ca.style.color='var(--acc)';ca.style.fontWeight='700';ca.textContent=(cm?b.getAttribute('data-open'):b.getAttribute('data-install'))||'MetaMask';out.appendChild(cs);out.appendChild(ca);}return;}var acc=null;try{acc=await window.ethereum.request({method:'eth_accounts'});}catch(x){}if(!acc||!acc[0])acc=await window.ethereum.request({method:'eth_requestAccounts'});var a=acc&&acc[0]?acc[0]:'';if(!a)return;var r=await fetch('/api/v1/reclamar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({precio_id:" + precioId + ",wallet:a,claim_type:type})});var d=await r.json();if(out)out.textContent=d&&d.ok?(d.status==='verified'?(b.getAttribute('data-verified')||'verified'):(b.getAttribute('data-pending')||'pending')):((d&&d.error)||'error');}catch(x){if(out)out.textContent='wallet';}});}wire('claimOwner','owner');wire('claimSeller','seller');})();";
 }
@@ -1408,6 +1442,7 @@ __name222222222222(claimJs, "claimJs");
 __name2222222222222(claimJs, "claimJs");
 __name22222222222222(claimJs, "claimJs");
 __name222222222222222(claimJs, "claimJs");
+__name2222222222222222(claimJs, "claimJs");
 function precioHtml(lang, t, row, claim) {
   var canonical = SITE_URL + "/precio/" + row.id;
   var cat = row.categoria && t["cat_" + row.categoria] ? row.categoria : catOf(row.item);
@@ -1471,6 +1506,7 @@ __name2222222222222(precioHtml, "precioHtml");
 __name22222222222222(precioHtml, "precioHtml");
 __name222222222222222(precioHtml, "precioHtml");
 __name2222222222222222(precioHtml, "precioHtml");
+__name22222222222222222(precioHtml, "precioHtml");
 async function sitemapXml(env) {
   var db = needDb(env);
   var rows = [];
@@ -1508,6 +1544,7 @@ __name2222222222222(sitemapXml, "sitemapXml");
 __name22222222222222(sitemapXml, "sitemapXml");
 __name222222222222222(sitemapXml, "sitemapXml");
 __name2222222222222222(sitemapXml, "sitemapXml");
+__name22222222222222222(sitemapXml, "sitemapXml");
 var worker_default = {
   async fetch(request, env) {
     var url = new URL(request.url);
